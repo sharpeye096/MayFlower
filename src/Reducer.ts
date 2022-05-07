@@ -4,7 +4,7 @@ import { Chessboard, initChessBoard, Position, StickState } from "./Stick";
 export const initState = initChessBoard();
 
 // the reducer function (Chessboard, MoveAction) => Chessboard
-export default (state = initState, action: UserAction): Chessboard => {
+const reducerFunc = (state = initState, action: UserAction): Chessboard => {
     if(action.type === "select") {
         return {
             ...state,
@@ -26,6 +26,8 @@ export default (state = initState, action: UserAction): Chessboard => {
 
     return state;
 }
+
+export default reducerFunc;
 
 function updateSticksOnChange(chessboard: StickState[][], pos1: Position): Position[] {
     let allChangedSticks = checkBAB2AAA(chessboard, pos1);

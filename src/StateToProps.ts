@@ -1,4 +1,3 @@
-import { forEachLeadingCommentRange } from "typescript";
 import { IProps } from "./Chess";
 import { Chessboard, Position, samePosition, selectStick, selectTarget, StickState } from "./Stick";
 
@@ -60,7 +59,7 @@ function sameLineCheck(chessboard: StickState[][], from: Position, to: Position)
         nextPos.x -= dx1;
         nextPos.y -= dy1;
     }
-    if(from.y <= 4 && to.y <= 4 || from.y > 4 && to.y > 4)    // in the same side
+    if((from.y <= 4 && to.y <= 4) || (from.y > 4 && to.y > 4))    // in the same side
         return true;
     return from.x === 2 && to.x === 2;
 }
@@ -88,7 +87,7 @@ function crossLineCheck(chessboard: StickState[][], from: Position, to: Position
         nextPos.y -= dy1;
     }
 
-    if(from.y <= 4 && to.y <= 4 || from.y > 4 && to.y > 4)    // in the same side
+    if((from.y <= 4 && to.y <= 4) || (from.y > 4 && to.y > 4))    // in the same side
         return true;
     const smallerY = from.y < to.y ? from : to;
     return smallerY.y !== 4 || (smallerY.x !== 4 && smallerY.x !== 0);
