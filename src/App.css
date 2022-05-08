@@ -52,6 +52,11 @@
   opacity: 0.8;
 }
 
+.history {
+  width: 128px;
+  background-color: #61eefe;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

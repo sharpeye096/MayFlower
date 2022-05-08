@@ -7,6 +7,11 @@ export interface Position {
     y: number;
 }
 
+export interface Move {
+    from: Position;
+    to: Position;
+}
+
 export function samePosition(pos1: Position, pos2: Position) {
     return pos1.x === pos2.x && pos1.y === pos2.y;
 }
@@ -14,6 +19,7 @@ export function samePosition(pos1: Position, pos2: Position) {
 export interface Chessboard {
     current: "r" | "w";
     sticks: StickState[][];
+    history: Move[];
     selectedStick?: Position;
 }
 
@@ -26,7 +32,8 @@ export function initChessBoard(): Chessboard {
             ["", "", "", "", "", "", ""],
             ["", "", "", "", "", ""],
             ["w", "w", "w", "w", "w"]
-        ]
+        ],
+        history: []
     }
 }
 

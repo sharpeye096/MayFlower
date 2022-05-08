@@ -4,11 +4,15 @@ Move with selected [done]
 Move validation [done]
 
 Effect after move
-    Action A: ABA=>AAA [TODO]
-    Action B: ABA=>BBB [TODO]
+    Action A: ABA=>AAA [done]
+    Action B: ABA=>BBB [done]
 
-Expand [TODO]
+Expand [done]
 
-History track [TODO]
+History track & winning tips [TODO]
+Revert last n steps[TODO]
+Fixes => BAB->AAA first [TODO]
+Last 1/2 ban[TODO]
+Wipe out and give another [TODO]
 
 https://orange-bush-06a6b1200-1.eastasia.1.azurestaticapps.net/

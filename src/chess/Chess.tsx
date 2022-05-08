@@ -76,11 +76,12 @@ class Chess extends React.PureComponent<IProps> {
             })
         })
         
-        return (
-        <div className="chessOuter">
-            <canvas id="canvas" className="chessCanvas" width="768px" height="512px"></canvas>
-            {allSticks.map(stick=>this.generateStick(stick.stick, stick.x, stick.y))}
-        </div>);
+        return (<>
+            <div className="chessOuter">
+                <canvas id="canvas" className="chessCanvas" width="768px" height="512px"></canvas>
+                {allSticks.map(stick=>this.generateStick(stick.stick, stick.x, stick.y))}
+            </div>
+        </>);
     }
 
     private generateStick(stick: StickState, x: number, y: number):JSX.Element {
