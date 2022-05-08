@@ -5,7 +5,8 @@ export function toProps(chessboard: Chessboard): IProps {
     return {
         sticks: chessboard.sticks,
         selectedStick: chessboard.selectedStick,
-        current: chessboard.current
+        current: chessboard.current,
+        history: chessboard.history
     };
 }
 
