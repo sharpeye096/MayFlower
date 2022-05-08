@@ -6,7 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 
-import reducer from "./Reducer";
+import reducer from "./chess/Reducer";
 import { createStore } from 'redux';
 
 const store = createStore(reducer as any);

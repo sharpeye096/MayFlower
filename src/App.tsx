@@ -1,7 +1,7 @@
 
 import './App.css';
 import { BrowserRouter as Router, Routes , Route, Link } from 'react-router-dom';
-import Chess from './Chess';
+import Chess from './chess/Chess';
 
 function App() {
   return (
