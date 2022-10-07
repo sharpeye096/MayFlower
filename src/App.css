@@ -80,3 +80,42 @@
     transform: rotate(360deg);
   }
 }
+
+.sudokuOuter {
+  display: flex;
+  flex-direction: column;
+  width: 504px;
+  height: 504px;
+  border: 1px solid #282c34;
+}
+
+.sudokuRow {
+  width: 504px;
+  height: 56px;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+}
+
+
+.sudokuCell {
+  width: 56px;
+  height: 56px;
+  line-height:56px;
+  border: 1px solid #282c34;
+  text-align:center;
+  font-size: x-large;
+}
+
+.sudokuCell:hover {
+  background-color:bisque
+}
+
+.suCellFocused {
+  background-color: aquamarine;
+}
+
+.suCellInvalid {
+  background-color:crimson;
+}
+

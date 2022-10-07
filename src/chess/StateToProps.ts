@@ -10,7 +10,6 @@ export function toProps(chessboard: Chessboard): IProps {
     };
 }
 
-
 export function onStickClick(chessboard: IProps, pos: Position) {
     if(chessboard.selectedStick) {
         if(samePosition(chessboard.selectedStick, pos)) {

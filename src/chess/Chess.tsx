@@ -28,7 +28,7 @@ const points = [[0, 0], [512, 512],
 
 class Chess extends React.PureComponent<IProps> {
     public componentWillUnmount() {
-        console.log(this.props);
+    
     }
 
     public componentDidMount() {
@@ -66,7 +66,7 @@ class Chess extends React.PureComponent<IProps> {
         const chess = this.props.sticks;
         
         const allSticks = chess.flatMap((line, lineNo)=>{
-            const x = lineNo;
+            const x: number = lineNo;
             return line.map((stick, colNo)=>{
                 return {
                     stick: stick,
