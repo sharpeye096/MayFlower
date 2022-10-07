@@ -89,20 +89,36 @@
   border: 1px solid #282c34;
 }
 
-.sudokuRow {
+.rowBig {
   width: 504px;
+  height: 168px;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+}
+
+.square {
+  width: 168px;
+  height: 168px;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  border: 1px solid #282c34;
+}
+
+.row {
+  width: 168px;
   height: 56px;
   display: flex;
   justify-content: space-evenly;
   flex-direction: row;
 }
 
-
 .sudokuCell {
   width: 56px;
   height: 56px;
   line-height:56px;
-  border: 1px solid #282c34;
+  border: 0.1px solid #333435;
   text-align:center;
   font-size: x-large;
 }

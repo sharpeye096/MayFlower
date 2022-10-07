@@ -1,4 +1,4 @@
-export type ActionType = "Select" | "Set" | "Revoke" | "Test";
+export type ActionType = "Select" | "Set" | "Revoke" | "Test" | "Resolve";
 
 export interface ActionPayload {
     index?: number;

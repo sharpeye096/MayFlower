@@ -2,9 +2,6 @@ export interface SudokuBoard {
     values: number[];
 }
 
-export type SudokuValidState = "Row" | "Col" | "Square" | "OK";
-
-
 export function index(row: number, col: number): number {
     return row*9+col;
 }
@@ -17,28 +14,12 @@ export function getByIndex(index: number, values: number[]): number {
     return values[index];
 }
 
-export function testByIndex(index: number, values: number[]): SudokuValidState {
-    const row = Math.floor(index / 9);
-    const col = Math.floor(index % 9);
-    return test(row, col, values);
-}
-
-export function test(row: number, col: number, values: number[]): SudokuValidState {
-    // test row
-    if(!test9Values(getValues(values, rowIndexes(row)))) {
-        return "Row";
-    }
-
-    // test col
-    if(!test9Values(getValues(values, colIndexes(col)))) {
-        return "Col";
-    }
-
-    // test square
-    if(!test9Values(getValues(values, squareIndexes(row, col)))) {
-        return "Square";
-    }
-    return "OK";
+// return invalid indexes 
+// 0~8: rows 0~8
+// 9~17: cols 0~8
+// 18~26: squares 0~8
+export function test(values: number[]): boolean[] {
+    return allIndexes.map(indexes=>test9Values(getValues(values, indexes)));
 }
 
 export function set(value: number, row: number, col: number, values: number[]): void {
@@ -46,7 +27,31 @@ export function set(value: number, row: number, col: number, values: number[]): 
     values[idx] = value;
 }
 
+export function getUnitIndexes(index: number): number[] {
+    const units = [];
+    const rowIndex = Math.floor(index / 9);
+    const colIndex = Math.floor(index % 9);
+    const squarRid = Math.floor(rowIndex / 3);
+    const squarCid = Math.floor(colIndex / 3);
+    const squareId = squarRid * 3 + squarCid;
+    return [rowIndex, colIndex+9, squareId+18];
+}
+
+function allIndexesFunc(): number[][] {
+    const rows = Array(9).fill(0).map((v, i)=>i).map(rId => rowIndexes(rId));
+    const cols = Array(9).fill(0).map((v, i)=>i).map(rId => colIndexes(rId));
+    const squars = [
+        [0, 0], [0, 3] , [0, 6], 
+        [3, 0], [3, 3] , [3, 6],
+        [6, 0], [6, 3] , [6, 6]
+    ].map(squar=>squareIndexes(squar[0], squar[1]));
+    return rows.concat(cols).concat(squars);
+}
+
+export const allIndexes = allIndexesFunc();
+
 // test if the given array are numbers from 1-9, one per value
+// true if tested OK. false if invalid
 function test9Values(values: number[]): boolean {
     const test = Array(9).fill(0);
     for(let i=0;i<9;i++) {

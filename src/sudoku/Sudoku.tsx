@@ -1,10 +1,8 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 
-import { index, SudokuValidState } from './Algo';
-import { mapDispatchToProps, SudokuProps, SudokuState, toProps } from './StateToProps';
-
-
+import { allIndexes, index } from './Algo';
+import { mapDispatchToProps, SudokuProps, toProps } from './StateToProps';
 
 class Sudoku extends React.PureComponent<SudokuProps> {
     public componentDidMount(): void {
@@ -12,10 +10,14 @@ class Sudoku extends React.PureComponent<SudokuProps> {
     }
 
     public render() {
+        console.log("resolve state: "+this.props.resolveState);
         return (<>
             <div className="sudokuOuter">
                 {this.renderCells()}
             </div>
+            <button onClick={()=>this.tryResolve()}>
+                Resolve
+            </button>
         </>);
     }
 
@@ -27,33 +29,51 @@ class Sudoku extends React.PureComponent<SudokuProps> {
         if(e.code.startsWith("F")) {
             return;
         }
-        if(!e.code.startsWith("Digit") || e.code === "Digit0") {
+        // array of [0, 1, ..., 9]
+        const keys = Array(10).fill(0).map((v, i)=>i);
+        const value = keys[parseInt(e.key)];
+        if(!!value) {
+            this.props.setValue(value, this.props.focusedIndex);    
+        } else {
             this.props.revoke(this.props.focusedIndex);
-            return;
         }
-        const value = e.keyCode-48;
-        this.props.setValue(value, this.props.focusedIndex);
     }
 
     private renderCells() {
-        const rows = Array(9).fill(0);
+        const squreRows = [0,1,2];
         return (<>
-            { rows.map((v, i)=>this.renderRow(i)) }
+            { squreRows.map((i)=>this.renderSquareRow(i)) }
         </>
         )
     }
     
-    private renderRow(row: number) {        
-        const cols = Array(9).fill(0);
-        return (<div className='sudokuRow'>
-            { cols.map((v, i)=>this.renderCell(row, i)) }
+    private renderSquareRow(row: number) {        
+        const squareCols = [0,1,2];
+        return (<div className='rowBig'>
+            { squareCols.map((v)=>this.renderSquare(row, v)) }
         </div>)
     }
 
-    private renderCell(row: number, col: number) {
+    private renderSquare(squareRow: number, squareCol: number) {
+        const cellIndexes = allIndexes[squareRow*3+squareCol+18];
+        return (<div className='square'>
+                    <div className='row'>
+                        { cellIndexes.slice(0, 3).map(idx=>this.renderCell(idx)) }
+                    </div>
+                    <div className='row'>
+                        { cellIndexes.slice(3, 6).map(idx=>this.renderCell(idx)) }
+                    </div>
+                    <div className='row'>
+                        { cellIndexes.slice(6, 9).map(idx=>this.renderCell(idx)) }
+                    </div>
+        </div>)
+    }
+
+    private renderCell(idx: number) {
+        const row = Math.floor(idx / 9);
+        const col = Math.floor(idx % 9);
         const values = this.props.values;
-        const idx = index(row, col);
-        let additionalClass = this.cellAdditionalClass(row, col, this.props.validState);
+        let additionalClass = this.cellAdditionalClass(row, col, this.props.invalidIndexes);
         const classNames = `sudokuCell${additionalClass}`;
         return (<div 
                     className={classNames} 
@@ -63,44 +83,29 @@ class Sudoku extends React.PureComponent<SudokuProps> {
                 </div>);
     }
 
-    private cellAdditionalClass(row: number, col: number, validState: SudokuValidState) {
-        if(validState === "OK") {
-            const idx = index(row, col);
-            if(idx === this.props.focusedIndex) {
-                return " suCellFocused";
-            } else {
-                return "";
-            }
-        }
+    private cellAdditionalClass(row: number, col: number, invalidIndexes: boolean[]) {
+        const colId = col + 9;
+        const squareRId = Math.floor(row/3);
+        const squareCId = Math.floor(col/3);
+        const squareId = squareRId * 3 + squareCId + 18;
 
-        const currentFocusedRow = Math.floor(this.props.focusedIndex / 9);
-        if(validState === "Row") {
-            if(currentFocusedRow === row) {
-                return " suCellInvalid";
-            } else {
-                return "";
-            }
-        }
-
-        const currentFocusedCol = Math.floor(this.props.focusedIndex % 9);
-        if(validState === "Col") {
-            if(currentFocusedCol === col) {
-                return " suCellInvalid";
-            } else {
-                return "";
-            }
-        }
-
-        // square
-        const focusedSquareRow = Math.floor(Math.floor(this.props.focusedIndex / 9) / 3);
-        const focusedSquareCol = Math.floor(Math.floor(this.props.focusedIndex % 9) / 3);
-        const cellSquareRow = Math.floor(row / 3);
-        const cellSquareCol = Math.floor(col / 3);
-        if(focusedSquareRow === cellSquareRow && focusedSquareCol === cellSquareCol){
+        const anyInvalid = !invalidIndexes[row] || !invalidIndexes[colId] || !invalidIndexes[squareId];
+        if(anyInvalid) {
             return " suCellInvalid";
-        } else {
-            return "";
+        } 
+        if(this.props.focusedIndex === index(row, col)) {
+            return " suCellFocused";
         }
+
+        return "";
+    }
+
+    private tryResolve() {
+        if(this.props.invalidIndexes.filter(i=>!i).length > 0) {
+            console.log("conflicting...")
+            return;
+        }
+        this.props.resolve && this.props.resolve();
     }
 }
 
