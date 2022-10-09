@@ -28,7 +28,6 @@ export function set(value: number, row: number, col: number, values: number[]): 
 }
 
 export function getUnitIndexes(index: number): number[] {
-    const units = [];
     const rowIndex = Math.floor(index / 9);
     const colIndex = Math.floor(index % 9);
     const squarRid = Math.floor(rowIndex / 3);
