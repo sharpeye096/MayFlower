@@ -131,6 +131,10 @@
   background-color: aquamarine;
 }
 
+.suCellBold {
+  font-weight: bold;
+}
+
 .suCellInvalid {
   background-color:crimson;
 }

@@ -18,6 +18,12 @@ class Sudoku extends React.PureComponent<SudokuProps> {
             <button onClick={()=>this.tryResolve()}>
                 Resolve
             </button>
+            <button onClick={()=>this.increaseSelected(1)}>
+                +
+            </button>
+            <button onClick={()=>this.increaseSelected(-1)}>
+                -
+            </button>
         </>);
     }
 
@@ -33,9 +39,9 @@ class Sudoku extends React.PureComponent<SudokuProps> {
         const keys = Array(10).fill(0).map((v, i)=>i);
         const value = keys[parseInt(e.key)];
         if(!!value) {
-            this.props.setValue(value, this.props.focusedIndex);    
+            this.props.setValue(value, this.props.focusedIndex, true);    
         } else {
-            this.props.revoke(this.props.focusedIndex);
+            this.props.revoke(this.props.focusedIndex, true);
         }
     }
 
@@ -73,17 +79,21 @@ class Sudoku extends React.PureComponent<SudokuProps> {
         const row = Math.floor(idx / 9);
         const col = Math.floor(idx % 9);
         const values = this.props.values;
-        let additionalClass = this.cellAdditionalClass(row, col, this.props.invalidIndexes);
+        
+        const value = values[idx];
+        const isProblemValue = !!(this.props.problemValues && this.props.problemValues[idx]);
+        let additionalClass = this.cellAdditionalClass(row, col, this.props.invalidIndexes, isProblemValue);
         const classNames = `sudokuCell${additionalClass}`;
+        
         return (<div 
                     className={classNames} 
                     id={`c-${row}-${col}`}
                     onClick={()=>this.props.focus && this.props.focus(idx)}>
-                        {values[idx] || ""}
+                        {value || ""}
                 </div>);
     }
 
-    private cellAdditionalClass(row: number, col: number, invalidIndexes: boolean[]) {
+    private cellAdditionalClass(row: number, col: number, invalidIndexes: boolean[], isProblemValue: boolean) {
         const colId = col + 9;
         const squareRId = Math.floor(row/3);
         const squareCId = Math.floor(col/3);
@@ -97,7 +107,7 @@ class Sudoku extends React.PureComponent<SudokuProps> {
             return " suCellFocused";
         }
 
-        return "";
+        return isProblemValue ? " suCellBold" : "";
     }
 
     private tryResolve() {
@@ -106,6 +116,16 @@ class Sudoku extends React.PureComponent<SudokuProps> {
             return;
         }
         this.props.resolve && this.props.resolve();
+    }
+
+    private increaseSelected(delta: number) {
+        const currentValue = this.props.values[this.props.focusedIndex];
+        const nextValue = (currentValue+delta+10) % 10;
+        if(!!nextValue) {
+            this.props.setValue && this.props.setValue(nextValue, this.props.focusedIndex, false);    
+        } else {
+            this.props.revoke && this.props.revoke(this.props.focusedIndex, false);
+        }
     }
 }
 

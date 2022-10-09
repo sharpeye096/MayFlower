@@ -1,3 +1,4 @@
+
 import { UserAction } from "./Actions";
 import { test } from "./Algo";
 import { tryResolve } from "./Resolve";
@@ -7,7 +8,8 @@ export const initState: SudokuState = {
     resolveState: 0,
     invalidIndexes: Array(27).fill(true),
     focusedIndex: -1,
-    values: Array(81).fill(0)
+    values: Array(81).fill(0),
+    problemValues: undefined
 }
 
 // the reducer function (Chessboard, MoveAction) => Chessboard
@@ -22,9 +24,10 @@ const reducerFunc = (state = initState, action: UserAction): SudokuState => {
         const values = [...state.values];
         values[state.focusedIndex] = action.payload.value || 0;
         const invalidIndexes = test(values);
+        const nextFocus = state.focusedIndex+(!!action.payload.shiftFocus?1:0);
         return {
             ...state,
-            focusedIndex: (state.focusedIndex+1)%81,
+            focusedIndex: nextFocus%81,
             resolveState: 0,
             invalidIndexes,
             values,
@@ -34,9 +37,10 @@ const reducerFunc = (state = initState, action: UserAction): SudokuState => {
         const values = [...state.values];
         values[state.focusedIndex] = 0;
         const invalidIndexes = test(values);
+        const nextFocus = state.focusedIndex+(!!action.payload.shiftFocus?1:0);
         return {
             ...state,
-            focusedIndex: (state.focusedIndex+1)%81,
+            focusedIndex: nextFocus%81,
             resolveState: 0,
             invalidIndexes,
             values,
@@ -44,11 +48,14 @@ const reducerFunc = (state = initState, action: UserAction): SudokuState => {
     }
 
     if(action.type === "Resolve") {
+        const problemValues = [...state.values];
         const values = tryResolve(state.values);
+        
         if(values && values.length) {
             const invalidIndexes = test(values);
             return {
                 ...state,
+                problemValues,
                 resolveState: 2,
                 invalidIndexes,
                 values,
@@ -57,6 +64,7 @@ const reducerFunc = (state = initState, action: UserAction): SudokuState => {
             // resolve failed
             return {
                 ...state,
+                problemValues: undefined,
                 resolveState: 1
             }
         }
